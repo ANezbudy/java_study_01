@@ -1,0 +1,5 @@
+# Project exclude paths
+/study/out/
+.idea/
+study/.gradle/
+study/study.iml
