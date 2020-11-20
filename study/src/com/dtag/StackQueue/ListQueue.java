@@ -3,6 +3,11 @@ package com.dtag.StackQueue;
 public class ListQueue {
     private ListElement tail;
     private ListElement head;
+    private int size = 0;
+
+    public int getSize() {
+        return size;
+    }
 
     public void put(String string) {
         ListElement element = new ListElement(null, string);
@@ -12,6 +17,7 @@ public class ListQueue {
             head = element;
         }
         tail = element;
+        size++;
     }
 
     public String get() {
@@ -25,7 +31,7 @@ public class ListQueue {
         if(head == null) {
             tail = null;
         }
-
+        size--;
         return result;
     }
     //comment
