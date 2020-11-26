@@ -11,9 +11,11 @@ public class ArrayStack {
     }
 
 
-    public void push(String string) {
+    public void push(String string) throws StackOverflowNauException {
         if (headIndex + 1 >= stackStrings.length) {
-            throw new StackOverflowError(); //TODO to create our own StackOverflowExeption
+//            throw new StackOverflowError(); //TODO to create our own StackOverflowExeption
+            throw new StackOverflowNauException();
+
         }
 
         stackStrings[headIndex + 1] = string;
