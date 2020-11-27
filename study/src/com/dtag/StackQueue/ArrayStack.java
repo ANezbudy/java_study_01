@@ -15,13 +15,10 @@ public class ArrayStack {
         if (headIndex + 1 >= stackStrings.length) {
 //            throw new StackOverflowError(); //TODO to create our own StackOverflowExeption
             throw new StackOverflowNauException();
-
         }
 
         stackStrings[headIndex + 1] = string;
         headIndex = headIndex + 1;
-
-
     }
 
     public String pop() {
