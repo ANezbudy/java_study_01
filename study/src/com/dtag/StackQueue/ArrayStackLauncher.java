@@ -14,5 +14,7 @@ public class ArrayStackLauncher {
             }
 
         }
+
+        System.out.println(0%4);
     }
 }
