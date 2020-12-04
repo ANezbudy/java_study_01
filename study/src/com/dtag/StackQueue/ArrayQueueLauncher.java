@@ -5,7 +5,7 @@ public class ArrayQueueLauncher {
         String[] string = "Java is a class-based, object-oriented programming language".split(" ");
 
         ArrayQueue queue = new ArrayQueue(10);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < string.length; i++) {
             try {
                 queue.put(string[i]);
             } catch (QueueOverflowException e) {
@@ -15,7 +15,7 @@ public class ArrayQueueLauncher {
 
         }
 
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < string.length; i++) {
             try{
                 System.out.println(queue.get());
             } catch (EmptyQueueException e) {

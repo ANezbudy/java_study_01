@@ -17,8 +17,8 @@ public class ArrayQueue {
         }
         String toReturn = array[headIndex];
         headIndex = headIndex + 1;
-        if (headIndex > array.length) {
-            headIndex = size - 1;
+        if (headIndex >= array.length) {
+            headIndex = 0;
         }
         size--;
         return toReturn;
