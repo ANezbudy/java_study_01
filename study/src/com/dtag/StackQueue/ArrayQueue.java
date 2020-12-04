@@ -3,9 +3,9 @@ package com.dtag.StackQueue;
 import java.util.LinkedList;
 
 public class ArrayQueue {
-    int size;
-    String[] array;
-    int headIndex;
+    private int size;
+    private String[] array;
+    private int headIndex;
 
     ArrayQueue(int capacity) {
         array = new String[capacity];
@@ -45,5 +45,17 @@ public class ArrayQueue {
         } else {
             return array[headIndex];
         }
+    }
+
+    public String[] getArray() {
+        return array;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getHeadIndex() {
+        return headIndex;
     }
 }
