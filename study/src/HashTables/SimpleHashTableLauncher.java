@@ -7,7 +7,7 @@ public class SimpleHashTableLauncher {
         hashTable.put(20, "string");
         hashTable.put(1, "first");
         hashTable.put(2, "2");
-        hashTable.put(20, "18");
+//        hashTable.put(20, "18");
 
         System.out.println(hashTable.get(20));
         System.out.println(hashTable.get(2));
