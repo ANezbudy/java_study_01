@@ -36,6 +36,6 @@ public class OurString {
 
     @Override
     public boolean equals(Object obj) {
-        return getValue().equals(((OurString)obj).getValue());
+        return ((OurString)obj).getOurHashCode() == getOurHashCode() && getValue().equals(((OurString)obj).getValue());
     }
 }
