@@ -1,4 +1,4 @@
-package ChristmasTree;
+package Patterns;
 
 
 import javax.swing.*;
