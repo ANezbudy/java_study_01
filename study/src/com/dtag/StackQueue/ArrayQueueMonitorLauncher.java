@@ -12,7 +12,6 @@ public class ArrayQueueMonitorLauncher {
                 System.out.println(e.getMessage() + " " + e.getStackTrace());
                 break;
             }
-
         }
 
         ArrayQueueMonitor.drawQueue(queue);
