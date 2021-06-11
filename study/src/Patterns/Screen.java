@@ -4,19 +4,20 @@ package Patterns;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 public class Screen {
     public static final int DIAMETER = 50;
+
 
     public static void main(String[] args) {
         drawSandBox();
     }
 
     public static void drawSandBox () {
-        drawTheHause();
+//        drawTheHause();
+        drawSnow();
     }
-
-
 
     private static void drawTheHause () {
         final String title = "Dream House";
@@ -135,5 +136,85 @@ public class Screen {
     private static void choseColor(int r, int g, int b, Graphics graphics) {
         Color color = new Color(r, g, b);
         graphics.setColor(color);
+    }
+
+    private static void drawSnow() {
+        drawTheHause();
+        final int width = 1600;
+        final int height = width / 16 * 9;
+        boolean running = true;
+        long currentTime = System.currentTimeMillis();
+
+        ArrayList<Drawable> arrayListDrawable = new ArrayList<>();
+        // ArrayList для Animated
+        ArrayList<Animated> arrayListAnimated = new ArrayList<>();
+        ArrayList<AnimatedSnow> arrayListWind = new ArrayList<>();
+
+        // создаем пул для снежинок
+        SnowflakePool snowflakePool = new SnowflakePool();
+        Thread threadSnowFlakePool = new Thread(snowflakePool);
+        snowflakePool.init(arrayListDrawable, arrayListAnimated, arrayListWind);
+        threadSnowFlakePool.start();
+
+///////////////////////////////
+        long counter = 0;
+
+
+        while (running) {
+
+            Graphics graphics = Display.getInstance().getGraphics(); //getting graphics (object, with which we can draw our objects)
+
+            graphics.clearRect(0,0, width, height);  //  очистка
+
+            /////////// время
+            long newTime = System.currentTimeMillis();
+            long timePast = newTime - currentTime;
+            currentTime = newTime;
+
+            counter = counter + timePast;
+
+            //  динамические снежинки: вытаскивание снежинок из Пула snowflakePool.getSnowflake() и добавление в их в arrayListAnimated, arrayListDrawable и в arrayListWind
+            for (int i=0; i<2; i++) {
+                int xRandom =  (int)(1+(Math.random()*width));   // [a;b) : ( Math.random() * (b-a) ) + a
+                int sizeRandom = (int) (2+(Math.random()*15));
+                double vRandom = 0.03 + Math.random()/20; //  /50
+
+
+
+                synchronized (arrayListAnimated) {
+                    AnimatedSnow animatedSnow = snowflakePool.getSnowflake(); //вытаскивание снежинок из Пула snowflakePool.getSnowflake()
+                    animatedSnow.reset(xRandom, 0, sizeRandom, vRandom);
+
+                    arrayListAnimated.add(animatedSnow);
+                    arrayListDrawable.add(animatedSnow);
+                    arrayListWind.add(animatedSnow);
+                }
+            }
+
+            synchronized (arrayListAnimated) {
+                // рисуем динамич объекты
+                for (Animated temp: arrayListAnimated) {
+                    temp.update(timePast);
+                    //temp.draw(graphics);
+                }
+
+                //  рисуем статич объекты
+                for (Drawable temp: arrayListDrawable) {
+                    temp.draw();
+                }
+
+
+                // применяем ветер
+//            for (AnimatedSnow temp: arrayListWind) {
+//                temp.applyWind(Environment.windSpeed, timePast);
+//            }
+            }
+
+
+
+
+            Display.getInstance().show(); //showing our drawing on screen
+
+        }  // end of while
     }
 }

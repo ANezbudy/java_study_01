@@ -11,71 +11,89 @@ public class ChristmasTree {
 
 
     public static void drawSandBox() {
-        drawTheHause();
-    }
-
-
-    private static void drawTheHause() {
         final String title = "Dream House";
         final int width = Display.getWidth();
         final int height = Display.getHeight();
 
+        long currentTime = System.currentTimeMillis();
 
         boolean running = true;
+        //массив для дома
+        ArrayList<Construction> arrayListConstruction = new ArrayList<>();
+
+
+        ArrayList<Drawable> arrayListDrawable = new ArrayList<>();
+        ArrayList<Animated> arrayListAnimated = new ArrayList<>();
+        ArrayList<AnimatedSnow> arrayListWind = new ArrayList<>();
+
+        arrayListConstruction.add(new House(230, 400));
+
+        // создаем пул для снежинок
+        SnowflakePool snowflakePool = new SnowflakePool();
+        Thread threadSnowflakePool = new Thread(snowflakePool);
+        snowflakePool.init(arrayListDrawable, arrayListAnimated, arrayListWind);
+        threadSnowflakePool.start();
 
 
         while (running) {
-            Graphics graphics = Display.getInstance().getGraphics();
+            Graphics graphics = Display.getInstance().getGraphics(); //getting graphics (object, with which we can draw our objects)
 
-            // set personal print
-            Font font = new Font("Arial", Font.PLAIN, 10);
-            graphics.setFont(font);
-            graphics.drawString("Nezbudii A", 10, 10);
+            graphics.clearRect(0,0, width, height);  //  очистка
 
-            // draw moon
-            choseColor(255, 255, 51, graphics);
-            graphics.fillOval(1200, 100, 150, 100);
+            /////////// время
+            long newTime = System.currentTimeMillis();
+            long timePast = newTime - currentTime;
+            currentTime = newTime;
+
+            for (int i=0; i<5; i++) {
+                int xRandom =  (int)(1+(Math.random()*width));   // [a;b) : ( Math.random() * (b-a) ) + a
+                int sizeRandom = (int) (2+(Math.random()*15));
+                double vRandom = 0.03 + Math.random()/20; //  /50
+
+                synchronized (arrayListAnimated) {
+
+                    AnimatedSnow animatedSnow = snowflakePool.getSnowflake(); //вытаскивание снежинок из Пула snowflakePool.getSnowflake()
+//                    AnimatedSnow animatedSnow = new AnimatedSnow();
+                    animatedSnow.reset(xRandom, 0, sizeRandom, vRandom);
+
+                    arrayListAnimated.add(animatedSnow);
+                    arrayListDrawable.add(animatedSnow);
+                    arrayListWind.add(animatedSnow);
+
+                }
 
 
-            // draw the land
-            choseColor(255, 255, 255, graphics);
-            for (int i = 0; i < 450; i++) {
-                graphics.drawLine(0, 450 + i, 1600, 550 + i);
             }
 
-            ArrayList<Construction> buildingConstructions = new ArrayList<>();
+            // рисуем динамич объекты
 
-            Building building = new Building(230, 400, 122, 95, 69);
-            buildingConstructions.add(building);
+            synchronized (arrayListAnimated) {
 
-            Chimney chimney = new Chimney(building, 92, 75, 39);
-            buildingConstructions.add(chimney);
+                for (Construction temp: arrayListConstruction) {
+                    temp.draw();
+                }
 
-            Roof roof = new Roof(building, 134, 60, 57);
-            buildingConstructions.add(roof);
+                //  рисуем статич объекты
+                for (Drawable temp: arrayListDrawable) {
+                    temp.draw();
+                }
 
-            Door door = new Door(building, 71, 58, 31);
-            buildingConstructions.add(door);
 
-            Window window_1 = new Window(260, 425, 82, 255, 233);
-            Window window_2 = new Window(460, 425, 82, 255, 233);
-            buildingConstructions.add(window_1);
-            buildingConstructions.add(window_2);
 
-            for (Construction b: buildingConstructions) {
-                b.draw();
+                for (Animated temp: arrayListAnimated) {
+                    temp.update(timePast);
+                    //temp.draw(graphics);
+                }
+
+                // применяем ветер
+//            for (AnimatedSnow temp: arrayListWind) {
+//                temp.applyWind(Environment.windSpeed, timePast);
+//            }
+
             }
-
             Display.getInstance().show(); // show our drawing on screen
         }
     }
-
-    private static void choseColor(int r, int g, int b, Graphics graphics) {
-        Color color = new Color(r, g, b);
-        graphics.setColor(color);
-    }
-
     //DONE to make all elements of the picture like an objects in object model
     //TODO implement the fabric pattern for objects
-
 }

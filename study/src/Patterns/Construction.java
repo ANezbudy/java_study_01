@@ -2,7 +2,7 @@ package Patterns;
 
 import java.awt.*;
 
-public class Construction {
+public class Construction{
     public int getX() {
         return x;
     }

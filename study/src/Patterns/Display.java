@@ -50,7 +50,8 @@ public class Display {
         frame = getFrame(title, width, height);
 
         //Creating the canvas
-        canvas = getCanvas(width, height);
+        Color color = new Color(6, 1, 58);
+        canvas = getCanvas(width, height, color);
 
         //Putting it all together
         frame.add(canvas);
@@ -67,11 +68,11 @@ public class Display {
         graphics = bufferStrategy.getDrawGraphics();
     }
 
-    private static Canvas getCanvas(int width, int height) {
+    private static Canvas getCanvas(int width, int height, Color color) {
         Canvas canvas = new Canvas();
 
         canvas.setSize(width, height);
-//        canvas.setBackground(color);
+        canvas.setBackground(color);
         canvas.setVisible(true);
         canvas.setFocusable(false);
 
