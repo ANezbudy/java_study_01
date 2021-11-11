@@ -38,7 +38,6 @@ public class SpaceShip extends Drawable implements Runnable {
         graphics.fillArc((int)(x - radius/2), (int)(y - radius), radius, radius*2, 0, 360);
     }
 
-    //TODO implement the routing for the ship via some list of routes inside the ship
     public void addPointToRoute(Planet planet) {
         destinations.add(planet);
     }
@@ -64,13 +63,12 @@ public class SpaceShip extends Drawable implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            System.out.println(load);
+//            System.out.println("Ship load: " + load);
             if (isFlying) {
                 if (Math.abs(x - destination.getPx()) <= speed && Math.abs(y - destination.getPy()) <= speed )  {
                     x = destination.getPx();
                     y = destination.getPy();
-                    isFlying = false;
-                    destination.dock(this);
+                    isFlying = !destination.dock(this);
                 } else {
                     double dX = destination.getPx() - x;
                     double dY = destination.getPy() - y;
@@ -97,6 +95,17 @@ public class SpaceShip extends Drawable implements Runnable {
             load += batch;
         } else {
             throw new ShipOverloadedException();
+        }
+    }
+
+    public double batchUnload(double batch) {
+        if (load < batch) {
+            double temp = load;
+            load = 0;
+            return temp;
+        } else {
+            load = load - batch;
+            return batch;
         }
     }
 

@@ -24,12 +24,18 @@ public class Galaxy {
 
         boolean running = true;
 
-        Planet gekata = new Planet(200, 150, 100, 89, 67, 70);
+
         Mine kali = new Mine(1100, 600, 200, 100, 100, 100);
+        Plant gekata = new Plant(200, 150, 100, 89, 67, 70, kali);
 
         Thread kaliThread = new Thread(kali);
         kaliThread.start();
+
+        Thread gekataThread = new Thread(gekata);
+        gekataThread.start();
+
         SpaceShip ship = new SpaceShip(gekata.getPx(), gekata.getPy(), 30, 0, 255, 127);
+        gekata.dock(ship);
 
         Thread shipThread = new Thread(ship);
 
@@ -44,15 +50,12 @@ public class Galaxy {
         arrayListDrawable.add(kali);
         arrayListDrawable.add(ship);
 
-        ship.addPointToRoute(kali);
-        ship.addPointToRoute(gekata);
-        try {
-            ship.undock();
-        } catch (ShipHasNoDestinationException e) {
-            e.printStackTrace();
-        }
-
         while (running) {
+
+            if (Math.random() < 0.01) {
+                gekata.placeOrder(2);
+            }
+
             Graphics graphics = Display.getInstance().getGraphics(); //getting graphics (object, with which we can draw our objects)
 
             graphics.clearRect(0, 0, width, height);  //  очистка
